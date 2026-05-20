@@ -17,15 +17,24 @@ const parserTT = (texto) =>{
 
     const monto = montoRaw ? parseFloat(montoRaw.replace(/\$/g,'').replace(/\./g,'').replace(',','.')): null;
 
-    return {
+    const errors = [];
+    if (!numero) errors.push('Numero de TT no encontrado');
+    if (!titular) errors.push('Titular no encontrado');
+    if(!cuit || !checkCuit(cuit)) errors.push('CUIT no encontrado o formato incorrecto');
+    if(!cbu || !checkCbu(cbu)) errors.push('CBU no encontrado o formato incorrecto');
+    if(!montoRaw || !checkAmount(montoRaw)) errors.push('Monto no encontrado ')
+    if (!cliente) errors.push('Cliente no encontrado');
+
+     return {
         numero,
-        titular:titular,
-        cbu:cbu,
-        cuit:cuit,
-        alias:alias,
-        monto:monto,
-        cliente:cliente
+        titular:titular || null,
+        cbu:cbu || null,
+        cuit:cuit || null,
+        alias:alias || null,
+        monto:monto || null,
+        cliente:cliente || null,
+        errors
     }
 }
 
-export {isTT, parserTT}
+export {checkTT, parserTT}
