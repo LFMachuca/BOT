@@ -1,12 +1,23 @@
 
-function  validarCuit(cuit) {
-    cuit = cuit.replace(/^\d{2}-?\d{8}-?\d{1}$/, '$1$2$3');
-    
 
-    
+function  checkCuit(cuit) {
+const cuitRegex = /^\d{2}-\d{8}-\d$/;
+return cuitRegex.test(cuit)
 }
-const isTT = (texto)  =>{
-    return /^tt\d+/i.test(texto.trim());
+    
+function checkCbu(cbu){
+        const cbuRegex = /^\d{22}$/;
+    return cbuRegex.test(cbu);
+}
+function checkAmount(amount){
+    if(!amount) return false;
+    const amountCleaned = parseFloat(amount.replace(/\$/g,'').replace(/\./g,'').replace(',','.'));
+    return !isNaN(amountCleaned)
+}
+
+const checkTT = (texto)  =>{
+    const textCleaned = texto.trim().split('\n')[0].trim();
+    return /^tt\d+$/i.test(textCleaned);
 }
 
 const parserTT = (texto) =>{
