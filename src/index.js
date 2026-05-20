@@ -23,16 +23,10 @@ client.on("ready", () => {
 client.on("message", (msg) => {
   try {
     if (msg.from != GROUP_ID) return;
-     console.log('Pasó el filtro de grupo')
-
-    console.log('Body bytes:', Buffer.from(msg.body).toString('hex'))
     if (!checkTT(msg.body)) return;
-
-
+    
     const tt = parserTT(msg.body);
-    console.log('TT parseada:', tt)
     createTTS(msg.id._serialized, tt);
-    console.log(" TT Guardada: ", tt.numero);
 
   } catch (error) {
     console.error("Error al procesar el mensaje", error);
