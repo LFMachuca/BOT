@@ -1,3 +1,10 @@
+
+function  validarCuit(cuit) {
+    cuit = cuit.replace(/^\d{2}-?\d{8}-?\d{1}$/, '$1$2$3');
+    
+
+    
+}
 const isTT = (texto)  =>{
     return /^tt\d+/i.test(texto.trim());
 }
