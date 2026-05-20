@@ -1,6 +1,6 @@
 import pkg from "whatsapp-web.js";
 import qrcode from "qrcode-terminal";
-import { isTT, parserTT } from "./parser/parser.js";
+import { checkTT, parserTT } from "./parser/parser.js";
 import { getProviderByEmoji } from "./providers/providers.js";
 import { createTTS, asignProvider, getTT } from "./storage/db.js";
 import { appendTT } from "./sheets/sheets.js";
@@ -24,7 +24,7 @@ client.on("message", (msg) => {
   try {
     if (msg.from != GROUP_ID) return;
 
-    if (!isTT(msg.body)) return;
+    if (!checkTT(msg.body)) return;
     const tt = parserTT(msg.body);
     createTTS(msg.id._serialized, tt);
     console.log(" TT Guardada: ", tt.numero);
