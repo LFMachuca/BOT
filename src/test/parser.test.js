@@ -33,4 +33,40 @@ describe ('is a TT', ()=>{
         expect(checkTT('tt45\nleon cassas\n20-40505395-1')).toBe(true);
     })
 })
+        const msg = `tt45
+        Leon casssas
+        20-40505395-1
+        2850599999999999999999
+        leons.tr
+        $2.500.555
+        leon`
+describe('ParserTT', ()=>{
+    it('Reconoce un mensaje con formato correcto', ()=>{
+        const result= parserTT(msg); 
+        expect(result.errors).toHaveLength(0);
+    })
+    it('Rechaza un cuit incorrecto ', ()=>{
+        const msgCuitIncorrecto = `tt56\narturito\n2546789\n2850599999999999999999\nr2d2\n34.600\nstar`
 
+        expect(parserTT(msgCuitIncorrecto ).errors).toHaveLength(1)
+        expect(parserTT(msgCuitIncorrecto).errors).toContain('CUIT no encontrado o formato incorrecto')
+    })
+    it('Rechaza una tt sin titular', ()=>{
+        const msgSinTitular= `tt56\n20-40505395-1\n2850599999999999999999\nr2d2\n34.600\nstar`
+        console.log(parserTT(msgSinTitular))
+        expect(parserTT(msgSinTitular).errors).toContain('Titular no encontrado');
+    })
+    it('Rechaza un tt sin cbu',()=>{
+        const msgSinCbu=`tt56\narturito\n20-40505395-1\nr2d2\n34.600\nstar`
+        expect(parserTT(msgSinCbu).errors).toContain('CBU no encontrado o formato incorrecto')
+
+    })
+    it('Rechaza una tt sin monto', ()=>{
+        const msgSinMonto = `tt56\narturito\n20-40505395-1\n2850599999999999999999\nr2d2\nstar`
+        expect(parserTT(msgSinMonto).errors).toContain('Monto no encontrado');
+    })
+        it('Rechaza una tt sin cliente', ()=>{
+        const msgSinCliente = `tt56\narturito\n20-40505395-1\n2850599999999999999999\nr2d2\n345200`
+        expect(parserTT(msgSinCliente).errors).toContain('Cliente no encontrado');
+    })
+})

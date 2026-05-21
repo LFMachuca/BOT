@@ -4,6 +4,10 @@ function  checkCuit(cuit) {
 const cuitRegex = /^\d{2}-\d{8}-\d$/;
 return cuitRegex.test(cuit)
 }
+function checkTtiular(titular){
+    const titularRegex =/[a-záéíóúüñA-ZÁÉÍÓÚÜÑ]/
+    return titularRegex.test(titular);
+}
     
 function checkCbu(cbu){
         const cbuRegex = /^\d{22}$/;
@@ -30,10 +34,10 @@ const parserTT = (texto) =>{
 
     const errors = [];
     if (!numero) errors.push('Numero de TT no encontrado');
-    if (!titular) errors.push('Titular no encontrado');
+    if (!titular || !checkTtiular(titular)) errors.push('Titular no encontrado');
     if(!cuit || !checkCuit(cuit)) errors.push('CUIT no encontrado o formato incorrecto');
     if(!cbu || !checkCbu(cbu)) errors.push('CBU no encontrado o formato incorrecto');
-    if(!montoRaw || !checkAmount(montoRaw)) errors.push('Monto no encontrado ')
+    if(!montoRaw || !checkAmount(montoRaw)) errors.push('Monto no encontrado')
     if (!cliente) errors.push('Cliente no encontrado');
 
      return {
