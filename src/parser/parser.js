@@ -21,7 +21,7 @@ function checkAmount(amount){
 
 const checkTT = (texto)  =>{
     const textCleaned = texto.trim().split('\n')[0].trim();
-    return /^tt\d+$/i.test(textCleaned);
+    return /^tt\s?\d+$/i.test(textCleaned);
 }
 
 const parserTT = (texto) =>{
