@@ -38,12 +38,15 @@ const findRowById = async (msgId) => {
   try {
     const res = await sheets.spreadsheets.values.get({
       spreadsheetId: process.env.SHEET_ID,
-      range: "Hoja 1!A:J",
+      range: "Hoja 1!A:G",
     });
     const rows = res.data.values || [];
-    const rowIndex = rows.findIndex((row) => row[2] === msg_id);
+    const rowIndex = rows.findIndex((row) => row[1] === msgId);
     return rowIndex;
-  } catch (error) {}
+  } catch (error) {
+    console.error("Error al buscar fila por ID", error);
+    return -1;
+  }
 };
 const updateTT = async (tt) => {
   try {
@@ -51,7 +54,7 @@ const updateTT = async (tt) => {
     if (index !== -1) {
       await sheets.spreadsheets.values.update({
         spreadsheetId: process.env.SHEET_ID,
-        range: `Hoja 1!B${index + 1}`,
+        range: `Hoja 1!G${index + 1}`,
         valueInputOption:'USER_ENTERED',
         requestBody:{
             values:[[tt.provider]]
@@ -60,6 +63,8 @@ const updateTT = async (tt) => {
 
       console.log(`TT ${tt.numero} actualizada en sheets con proveedor ${tt.provider}`)
     }
-  } catch {}
+  } catch(error) {
+    console.error("Error al actualizar TT a Sheets", error);
+  }
 };
-export { appendTT };
+export { appendTT , updateTT};

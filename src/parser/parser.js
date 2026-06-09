@@ -1,10 +1,10 @@
 
 
 function  checkCuit(cuit) {
-const cuitRegex = /^\d{2}-\d{8}-\d$/;
+const cuitRegex = /^\d{2}-\d{8}-\d$/ || /^\d{11}$/;
 return cuitRegex.test(cuit)
 }
-function checkTtiular(titular){
+function checkTitular(titular){
     const titularRegex =/[a-záéíóúüñA-ZÁÉÍÓÚÜÑ]/
     return titularRegex.test(titular);
 }
@@ -25,16 +25,31 @@ const checkTT = (texto)  =>{
 }
 
 const parserTT = (texto) =>{
-    const lines = texto.trim().split('\n').map(line => line.trim());
-    const [encabezado, titular, cuit, cbu, alias, montoRaw, cliente] = lines;
+    const lines = texto.trim().split('\n').map(line => line.trim()).filter(line => line);
+   // const [encabezado, titular, cuit, cbu, alias, montoRaw, cliente] = lines;
 
-    const numero = encabezado.replace(/^tt/i, '')
+    const encabezado= lines[0]
+    const numero = encabezado.replace(/^tt\s*/i, '')
 
-    const monto = montoRaw ? parseFloat(montoRaw.replace(/\$/g,'').replace(/\./g,'').replace(',','.')): null;
+    let titular = null
+    let cuit = null
+    let cbu = null
+    let alias = null
+    let montoRaw = null
+    let cliente = null
+
+    for(const line of lines.slice(1)){
+        console.log(`Línea: "${line}" | titular:${checkTitular(line)} | cuit:${checkCuit(line)} | cbu:${checkCbu(line)} | monto:${checkAmount(line)}`)
+        if(!titular && checkTitular(line)) {titular = line;  continue ;}
+        if(!cuit && checkCuit(line)) {cuit = line; continue;}
+        if(!cbu && checkCbu(line)) {cbu = line; continue;}
+        if(!montoRaw && checkAmount(line)) {montoRaw = line; continue;}
+        cliente = line;
+    }
 
     const errors = [];
     if (!numero) errors.push('Numero de TT no encontrado');
-    if (!titular || !checkTtiular(titular)) errors.push('Titular no encontrado');
+    if (!titular || !checkTitular(titular)) errors.push('Titular no encontrado');
     if(!cuit || !checkCuit(cuit)) errors.push('CUIT no encontrado o formato incorrecto');
     if(!cbu || !checkCbu(cbu)) errors.push('CBU no encontrado o formato incorrecto');
     if(!montoRaw || !checkAmount(montoRaw)) errors.push('Monto no encontrado')
@@ -43,10 +58,10 @@ const parserTT = (texto) =>{
      return {
         numero,
         titular:titular || null,
-        cbu:cbu || null,
         cuit:cuit || null,
+        cbu:cbu || null,
         alias:alias || null,
-        monto:monto || null,
+        monto:montoRaw ? parseFloat(montoRaw.replace(/\$/g,'').replace(/\./g,'').replace(',','.')) : null,
         cliente:cliente || null,
         errors
     }
