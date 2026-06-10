@@ -8,9 +8,6 @@ db.exec(`
         msg_id TEXT UNIQUE,
         numero TEXT,
         titular TEXT,
-        cuit TEXT,
-        cbu TEXT,
-        alias TEXT,
         monto REAL,
         cliente TEXT,
         provider TEXT,
@@ -20,8 +17,8 @@ db.exec(`
 
 const createTTS = (msgId, tt) =>{
     const stm = db.prepare(`
-        INSERT OR IGNORE INTO TTS (msg_id, numero, titular, cbu, cuit, alias, monto, cliente)
-        VALUES (@msgId, @numero, @titular, @cbu, @cuit, @alias, @monto, @cliente)
+        INSERT OR IGNORE INTO TTS (msg_id, numero, titular, monto, cliente)
+        VALUES (@msgId, @numero, @titular, @monto, @cliente)
         `);
         stm.run({msgId, ...tt})
 }

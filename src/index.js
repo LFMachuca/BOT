@@ -37,7 +37,6 @@ client.on("message_create", async (msg) => {
     };
     
     const tt = parserTT(msg.body);
-    console.log('TT parseada:', JSON.stringify(tt, null, 2))
     createTTS(msg.id._serialized, tt);
     await appendTT({msg_id: msg.id._serialized, ...tt})
     console.log('TT procesada y guardad en db:', tt.numero, 'con errores:', tt.errors.length>0 ? tt.errors : 'NO HAY ERRORES')

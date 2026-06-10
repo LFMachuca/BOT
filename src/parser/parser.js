@@ -1,20 +1,11 @@
-
-
-function  checkCuit(cuit) {
-const cuitRegex = /^\d{2}-\d{8}-\d$/ || /^\d{11}$/;
-return cuitRegex.test(cuit)
-}
 function checkTitular(titular){
     const titularRegex =/[a-záéíóúüñA-ZÁÉÍÓÚÜÑ]/
     return titularRegex.test(titular);
 }
     
-function checkCbu(cbu){
-        const cbuRegex = /^\d{22}$/;
-    return cbuRegex.test(cbu);
-}
 function checkAmount(amount){
     if(!amount) return false;
+    if(!/[\$\.,]/.test(amount)) return false;
     const amountCleaned = parseFloat(amount.replace(/\$/g,'').replace(/\./g,'').replace(',','.'));
     return !isNaN(amountCleaned)
 }
@@ -39,28 +30,20 @@ const parserTT = (texto) =>{
     let cliente = null
 
     for(const line of lines.slice(1)){
-        console.log(`Línea: "${line}" | titular:${checkTitular(line)} | cuit:${checkCuit(line)} | cbu:${checkCbu(line)} | monto:${checkAmount(line)}`)
-        if(!titular && checkTitular(line)) {titular = line;  continue ;}
-        if(!cuit && checkCuit(line)) {cuit = line; continue;}
-        if(!cbu && checkCbu(line)) {cbu = line; continue;}
         if(!montoRaw && checkAmount(line)) {montoRaw = line; continue;}
+        if(!titular && checkTitular(line)) {titular = line;  continue ;}
         cliente = line;
     }
 
     const errors = [];
     if (!numero) errors.push('Numero de TT no encontrado');
     if (!titular || !checkTitular(titular)) errors.push('Titular no encontrado');
-    if(!cuit || !checkCuit(cuit)) errors.push('CUIT no encontrado o formato incorrecto');
-    if(!cbu || !checkCbu(cbu)) errors.push('CBU no encontrado o formato incorrecto');
     if(!montoRaw || !checkAmount(montoRaw)) errors.push('Monto no encontrado')
     if (!cliente) errors.push('Cliente no encontrado');
 
      return {
         numero,
         titular:titular || null,
-        cuit:cuit || null,
-        cbu:cbu || null,
-        alias:alias || null,
         monto:montoRaw ? parseFloat(montoRaw.replace(/\$/g,'').replace(/\./g,'').replace(',','.')) : null,
         cliente:cliente || null,
         errors
